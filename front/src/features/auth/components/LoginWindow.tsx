@@ -1,23 +1,9 @@
 import { useState } from "react";
+import { useRegister } from "../api/use-register";
 
 export default function LoginWindow() {
   const [email, setEmail] = useState<string>("");
-
-  async function registerUser() {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth`, {
-      method: "POST",
-      body: JSON.stringify({ email }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      console.log("error with res");
-    }
-
-    console.log(await res.json());
-  }
+  const register = useRegister();
 
   return (
     <div>
@@ -30,11 +16,15 @@ export default function LoginWindow() {
       />
 
       <button
-        onClick={registerUser}
+        disabled={register.isPending}
+        onClick={() => register.mutate(email)}
         className="border border-white text-white rounded-md p-2 ml-3"
       >
-        Register
+        {register.isPending ? "Creating user..." : "Register"}
       </button>
+
+      {register.isError && <p>{register.error.message}</p>}
+      {register.isSuccess && <p>User created.</p>}
     </div>
   );
 }
