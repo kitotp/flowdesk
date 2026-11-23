@@ -10,3 +10,15 @@ export async function registerUser(email: string): Promise<User> {
     },
   });
 }
+
+export async function loginWithEmail(email: string): Promise<User> {
+  return await request<User>(`auth/login?email=${email}`, {
+    method: "GET",
+  });
+}
+
+export async function getMyUser(): Promise<User> {
+  return await request<User>("auth/me", {
+    method: "GET",
+  });
+}
