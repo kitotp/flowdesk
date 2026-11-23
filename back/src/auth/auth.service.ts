@@ -13,4 +13,12 @@ export class AuthService {
       },
     });
   }
+
+  loginWithGmail(email: string) {
+    return this.prismaService.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+  }
 }
